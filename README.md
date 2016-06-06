@@ -54,6 +54,14 @@ This is useful to reduce the number of metrics sent to Librato.
     
 Controls the collection interval of collectd.
 
+  aerospike_collectd_sourcename: "{{ inventory_hostname }}"
+
+Controls the prefix of the collectd sourcename.
+The full name will have the instance ID as a postfix when deployed to AWS EC2.
+For example, `web1-i-1234567`.
+Otherwise the name will have 'local' as a postfix.
+For example, `web1-local`.
+
 Dependencies
 ------------
 
