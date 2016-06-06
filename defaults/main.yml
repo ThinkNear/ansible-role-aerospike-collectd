@@ -7,3 +7,4 @@ aerospike_collectd_librato_user: EMAIL
 aerospike_collectd_librato_password: TOKEN
 aerospike_collectd_aggregate_cpu: true
 aerospike_collectd_interval: 10
+aerospike_collectd_sourcename: "{{ inventory_hostname }}"
