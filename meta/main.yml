@@ -1,6 +1,6 @@
 galaxy_info:
   author: Thinknear Engineer
-  description: 
+  description: Ansible Role - Aerospike Collectd
   company: Thinknear
   
   # If the issue tracker for your role is not on github, uncomment the
