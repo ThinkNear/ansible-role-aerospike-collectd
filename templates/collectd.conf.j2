@@ -1,0 +1,40 @@
+#jinja2: lstrip_blocks: True
+Hostname    "{{ aerospike_collectd_sourcename }}-{{ ec2_id | default('local') }}"
+BaseDir     "/var/lib/collectd"
+PIDFile     "/var/run/collectd.pid"
+PluginDir   "/usr/lib64/collectd"
+TypesDB     "/usr/share/collectd/types.db"
+Interval    {{ aerospike_collectd_interval }}
+
+LoadPlugin syslog
+<Plugin "syslog">
+  LogLevel info
+</Plugin>
+
+LoadPlugin cpu
+LoadPlugin interface
+LoadPlugin load
+LoadPlugin memory
+
+LoadPlugin df
+<Plugin "df">
+  IgnoreSelected true
+</Plugin>
+
+LoadPlugin swap
+<Plugin "swap">
+  ReportByDevice false
+  ReportBytes true
+</Plugin>
+
+LoadPlugin netlink
+<Plugin "netlink">
+  Interface "eth0"
+  VerboseInterface "eth0"
+  QDisc "eth0"
+  Interface "eth1"
+  VerboseInterface "eth1"
+  QDisc "eth1"
+</Plugin>
+
+Include "/etc/collectd.d"

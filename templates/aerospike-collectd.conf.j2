@@ -1,0 +1,71 @@
+#jinja2: lstrip_blocks: True
+TypesDB "/usr/share/collectd/types.db"
+TypesDB "{{ aerospike_collectd_install_dir }}/aerospike-collectd-{{ aerospike_collectd_plugin_version }}/aerospike_types.db"
+
+<LoadPlugin python>
+    Globals true
+</LoadPlugin>
+
+{% if aerospike_collectd_plugin_version | match("0.*") %}
+<Plugin python>
+    ModulePath "/usr/lib64/python2.7/site-packages/"
+    ModulePath "{{ aerospike_collectd_install_dir }}/aerospike-collectd-{{ aerospike_collectd_plugin_version }}/"
+    LogTraces true
+    Interactive false
+    Import "aerospike_plugin"
+    <Module aerospike_plugin>
+        Host   "127.0.0.1"
+        Port   3000
+    </Module>
+</Plugin>
+{% else %}
+<Plugin python>
+    ModulePath "{{ aerospike_collectd_install_dir }}/aerospike-collectd-{{ aerospike_collectd_plugin_version }}/"
+    LogTraces true
+    Interactive false
+    Import "aerospike_plugin"
+</Plugin>
+{% endif %}
+
+{% if aerospike_collectd_use_librato %}
+LoadPlugin write_http
+<Plugin write_http>
+  <URL "https://collectd.librato.com/v1/measurements">
+    User "{{ aerospike_collectd_librato_user }}"
+    Password "{{ aerospike_collectd_librato_password }}"
+    Format "JSON"
+  </URL>
+</Plugin>
+{% endif %}
+
+{% if aerospike_collectd_aggregate_cpu %}
+LoadPlugin aggregation
+
+<Plugin "aggregation">
+  <Aggregation>
+    Plugin "cpu"
+    Type "cpu"
+
+    GroupBy "Host"
+    GroupBy "TypeInstance"
+
+    CalculateSum true
+    CalculateAverage true
+  </Aggregation>
+</Plugin>
+
+LoadPlugin "match_regex" # we want to use this for our Matching
+<Chain "PostCache">
+  <Rule> # Send "cpu" values to the aggregation plugin.
+    <Match regex>
+      Plugin "^cpu$"
+      PluginInstance "^[0-9]+$"
+    </Match>
+    <Target write>
+      Plugin "aggregation"
+    </Target>
+    Target stop
+  </Rule>
+  Target "write"
+</Chain>
+{% endif %}

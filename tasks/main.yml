@@ -1,0 +1,69 @@
+---
+- name: Install collectd.
+  yum: name={{ item }} state=latest
+  with_items:
+    - collectd
+    - collectd-netlink
+
+- name: Install version 0 packages.
+  yum: name={{ item }} state=latest
+  with_items:
+    - openssl-devel
+    - gcc
+    - python-devel
+  when: aerospike_collectd_plugin_version | match("0.*")
+
+- name: Copy main collectd configuration.
+  template:
+    src: collectd.conf.j2
+    dest: "{{ aerospike_collectd_conf_dir }}/../collectd.conf"
+    backup: yes
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+   - restart collectd
+
+- name: Install plugin python dependencies.
+  easy_install: name={{ item }}
+  with_items:
+    - pip
+
+- name: Install version 0 plugin python dependencies
+  easy_install: name=pycrypto
+  when: aerospike_collectd_plugin_version | match("0.*")
+
+- name: Download aerospike collectd plugin source.
+  unarchive:
+    src: "https://github.com/aerospike/aerospike-collectd/archive/v{{ aerospike_collectd_plugin_version }}.tar.gz"
+    dest: "{{ aerospike_collectd_install_dir }}"
+    copy: no
+  notify:
+    - restart collectd
+
+- name: Version 0 plugin does not report with node id.
+  lineinfile:
+    dest: "{{ aerospike_collectd_install_dir }}/aerospike-collectd-{{ aerospike_collectd_plugin_version }}/aerospike_plugin.py"
+    state: absent
+    regexp: 'plugin_instance.append\(self.node_id\)'
+  when: aerospike_collectd_plugin_version | match("0.*")
+  notify:
+    - restart collectd
+
+- name: Install python requirements.
+  pip: requirements={{ aerospike_collectd_install_dir }}/aerospike-collectd-{{ aerospike_collectd_plugin_version }}/requirements.txt
+  notify:
+    - restart collectd
+
+- name: Copy aerospike plugin configuration file.
+  template:
+    src: aerospike-collectd.conf.j2
+    dest: "{{ aerospike_collectd_conf_dir }}/aerospike-collectd.conf"
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  notify: restart collectd
+
+- name: Start and enable collectd.
+  service: name=collectd state=started enabled=yes

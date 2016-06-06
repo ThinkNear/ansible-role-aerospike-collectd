@@ -1,0 +1,9 @@
+---
+aerospike_collectd_plugin_version: 1.0.1
+aerospike_collectd_conf_dir: /etc/collectd.d
+aerospike_collectd_install_dir: /usr/local/src
+aerospike_collectd_use_librato: false
+aerospike_collectd_librato_user: EMAIL
+aerospike_collectd_librato_password: TOKEN
+aerospike_collectd_aggregate_cpu: true
+aerospike_collectd_interval: 10
