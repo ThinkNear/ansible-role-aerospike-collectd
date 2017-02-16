@@ -21,6 +21,14 @@ LoadPlugin df
   IgnoreSelected true
 </Plugin>
 
+LoadPlugin disk
+<Plugin "disk">
+  {% for disk in aerospike_collectd_disks %}
+  Disk "{{ disk }}"
+  {% endfor %}
+  IgnoreSelected false
+</Plugin>
+
 LoadPlugin swap
 <Plugin "swap">
   ReportByDevice false

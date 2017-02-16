@@ -62,6 +62,12 @@ For example, `web1-i-1234567`.
 Otherwise the name will have 'local' as a postfix.
 For example, `web1-local`.
 
+    aerospike_collectd_disks:
+      - xvdb
+      - xvdc
+
+Controls the disks to monitor.
+
 Dependencies
 ------------
 
