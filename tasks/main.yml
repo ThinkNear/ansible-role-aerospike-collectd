@@ -2,8 +2,8 @@
 - name: Install collectd.
   yum: name={{ item }} state=latest
   with_items:
-    - collectd
-    - collectd-netlink
+    - collectd{{ aerospike_collectd_package_version | default('') }}
+    - collectd-netlink{{ aerospike_collectd_package_version | default('') }}
 
 - name: Install version 0 packages.
   yum: name={{ item }} state=latest
