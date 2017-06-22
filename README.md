@@ -68,6 +68,10 @@ For example, `web1-local`.
 
 Controls the disks to monitor.
 
+    aerospike_collectd_package_version: -5.4.1
+
+Controls the package version installed. Leave unset for latest.
+
 Dependencies
 ------------
 
