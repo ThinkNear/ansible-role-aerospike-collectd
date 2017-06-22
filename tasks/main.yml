@@ -1,9 +1,14 @@
 ---
-- name: Install collectd.
-  yum: name={{ item }} state=latest
-  with_items:
-    - collectd
-    - collectd-netlink
+- name: Install collectd packages.
+  yum: name={{ item }} state=present
+  with_items: "{{ aerospike_collectd_packages }}"
+
+- name: Install collectd v5.7 packages.
+  yum: name={{ item }} state=present
+  with_items: "{{ aerospike_collectd_5_7_packages }}"
+  when:
+    - aerospike_collectd_package_version | match("5.7.*")
+    - not aerospike_collectd_is_travis
 
 - name: Install version 0 packages.
   yum: name={{ item }} state=latest
@@ -62,7 +67,6 @@
     owner: root
     group: root
     mode: 0644
-    backup: yes
   notify: restart collectd
 
 - name: Start and enable collectd.
