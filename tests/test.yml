@@ -3,3 +3,5 @@
   remote_user: root
   roles:
     - role_under_test
+  vars:
+    aerospike_collectd_is_travis: true

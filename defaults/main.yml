@@ -11,3 +11,12 @@ aerospike_collectd_sourcename: "{{ inventory_hostname }}"
 aerospike_collectd_disks:
   - xvdb
   - xvdc
+aerospike_collectd_package_version: 5.7.1
+aerospike_collectd_packages:
+  - "collectd-{{ aerospike_collectd_package_version }}"
+  - "collectd-netlink-{{ aerospike_collectd_package_version }}"
+aerospike_collectd_5_7_packages:
+  - "collectd-write_http-{{ aerospike_collectd_package_version }}"
+  - "collectd-python-{{ aerospike_collectd_package_version }}"
+  - "collectd-disk-{{ aerospike_collectd_package_version }}"
+aerospike_collectd_is_travis: false
