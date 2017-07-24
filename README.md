@@ -54,6 +54,10 @@ This is useful to reduce the number of metrics sent to Librato.
     
 Controls the collection interval of collectd.
 
+    aerospike_collectd_max_read_interval: 86400
+    
+Controls the interval between queries after each failed attempt to get data.
+
   aerospike_collectd_sourcename: "{{ inventory_hostname }}"
 
 Controls the prefix of the collectd sourcename.

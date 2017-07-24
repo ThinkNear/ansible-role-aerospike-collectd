@@ -5,6 +5,7 @@ PIDFile     "/var/run/collectd.pid"
 PluginDir   "/usr/lib64/collectd"
 TypesDB     "/usr/share/collectd/types.db"
 Interval    {{ aerospike_collectd_interval }}
+MaxReadInterval    {{ aerospike_collectd_max_read_interval }}
 
 LoadPlugin syslog
 <Plugin "syslog">
