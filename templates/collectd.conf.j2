@@ -36,14 +36,4 @@ LoadPlugin swap
   ReportBytes true
 </Plugin>
 
-LoadPlugin netlink
-<Plugin "netlink">
-  Interface "eth0"
-  VerboseInterface "eth0"
-  QDisc "eth0"
-  Interface "eth1"
-  VerboseInterface "eth1"
-  QDisc "eth1"
-</Plugin>
-
 Include "/etc/collectd.d"
